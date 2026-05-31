@@ -162,21 +162,4 @@ bash practice4/scripts/load-test.sh   # COUNT=150, уникальный Idempote
 
 Без мониторинга в Kubernetes остаются только `kubectl logs` и ручные `curl`; при 2 репликах gateway и асинхронной очереди это не масштабируется. Prometheus + Grafana + ServiceMonitor дают единую картину для practice2/practice3 в Minikube.
 
----
 
-## 7. Использование ИИ
-
-**Cursor Agent** — Helm-скрипт, ServiceMonitor, дашборд JSON, бизнес-метрики в коде, отчёт PRACTICE4.md.  
-**Вручную** — установка minikube/kubectl/helm, port-forward, load-test, скриншоты, правка PromQL (`[1m]` в `rate()`).
-
----
-
-## 8. Чеклист сдачи
-
-- [x] Prometheus + Grafana (`kube-prometheus-stack`) в namespace `monitoring`
-- [x] ServiceMonitor для gateway и worker
-- [x] Targets приложения UP
-- [x] Дашборд Grafana импортирован
-- [x] Нагрузочный тест `load-test.sh` (150 запросов)
-- [x] Скриншоты в `practice4/screenshots/` (3 шт.)
-- [ ] Пересборка образов с `business_tasks_*` (опционально, при доступе к Docker Hub)
