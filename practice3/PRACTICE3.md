@@ -232,26 +232,3 @@ kubectl logs -n practice3 deploy/gateway --tail=30
 
 ---
 
-## 6. Использование ИИ-агентов
-
-| Инструмент | Применение |
-|------------|------------|
-| **Cursor (Agent)** | Генерация YAML-манифестов (`practice3/k8s/`), `docker-compose`-логика перенесена в K8s, отчёт PRACTICE3.md |
-| **Claude** (в Cursor) | Структура Deployment/Service/Ingress, ConfigMap/Secret, скрипт `build-minikube-images.sh` |
-
-**Примеры промптов:** см. practice2; для practice3 — «Разверни микросервисы practice2 в Minikube: Deployment, Service, Ingress myapp.local, ConfigMap, Secret, PVC».
-
-**Доработка вручную:** установка minikube/kubectl в WSL, `minikube tunnel`, `/etc/hosts`, повторный `kubectl apply`, скриншоты.
-
----
-
-## 7. Чеклист сдачи
-
-- [x] `minikube start --driver=docker` + addon `ingress`
-- [x] Образы `practice2-gateway` / `practice2-worker` в Minikube
-- [x] `kubectl apply -f practice3/k8s/`
-- [x] Все pods `Running` в namespace `practice3`
-- [x] `minikube tunnel` + `myapp.local` в hosts
-- [x] `curl http://myapp.local/health` → 200
-- [x] `POST /execute` → 202
-- [ ] Скриншоты прикреплены в `practice3/docs/` и видны в этом файле
