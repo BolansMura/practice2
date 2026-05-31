@@ -1,0 +1,20 @@
+# ServiceMonitor для kube-prometheus-stack (Helm release name: monitoring)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: gateway
+  namespace: practice3
+  labels:
+    app: gateway
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: gateway
+  namespaceSelector:
+    matchNames:
+      - practice3
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s

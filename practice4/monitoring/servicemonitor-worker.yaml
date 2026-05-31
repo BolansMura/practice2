@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: worker
+  namespace: practice3
+  labels:
+    app: worker
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: worker
+  namespaceSelector:
+    matchNames:
+      - practice3
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 15s

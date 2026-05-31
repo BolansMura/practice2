@@ -19,6 +19,7 @@ from shared.config import (
 )
 from shared.idempotency import result_key
 from shared.metrics import (
+    BUSINESS_TASKS_COMPLETED,
     WORKER_RETRIES,
     WORKER_TASK_DURATION,
     WORKER_TASKS_PROCESSED,
@@ -137,6 +138,7 @@ async def process_task(
         )
         await client.xack(STREAM_NAME, CONSUMER_GROUP, message_id)
         WORKER_TASKS_PROCESSED.labels(status="success").inc()
+        BUSINESS_TASKS_COMPLETED.labels(action=body.action.value).inc()
     except TRANSIENT_ERRORS as exc:
         logger.error("Task %s failed after retries: %s", idempotency_key, exc)
         error_result = TaskResult(

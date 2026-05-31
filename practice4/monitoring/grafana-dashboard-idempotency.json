@@ -1,0 +1,105 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "unit": "reqps" } },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "title": "HTTP RPS by status",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total{namespace=\"practice3\",pod=~\"gateway.*\"}[1m])) by (status)",
+          "legendFormat": "status {{status}}"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "title": "Latency p95 (Gateway)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{namespace=\"practice3\",pod=~\"gateway.*\"}[1m])) by (le))",
+          "legendFormat": "p95 gateway"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 3,
+      "title": "Tasks accepted (business or cache miss)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(business_tasks_accepted_total{namespace=\"practice3\"}[1m])) by (action)",
+          "legendFormat": "business {{action}}"
+        },
+        {
+          "expr": "rate(cache_misses_total{namespace=\"practice3\"}[1m])",
+          "legendFormat": "cache_miss (proxy if no business metric)"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 4,
+      "title": "Tasks completed (business or worker)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(business_tasks_completed_total{namespace=\"practice3\"}[1m])) by (action)",
+          "legendFormat": "business {{action}}"
+        },
+        {
+          "expr": "sum(rate(worker_tasks_processed_total{namespace=\"practice3\",status=\"success\"}[1m]))",
+          "legendFormat": "worker success"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "id": 5,
+      "title": "Cache hits / misses",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(cache_hits_total{namespace=\"practice3\"}[1m])",
+          "legendFormat": "hits"
+        },
+        {
+          "expr": "rate(cache_misses_total{namespace=\"practice3\"}[1m])",
+          "legendFormat": "misses"
+        }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": ["practice4", "idempotency"],
+  "templating": {
+    "list": [
+      {
+        "name": "datasource",
+        "type": "datasource",
+        "query": "prometheus",
+        "current": { "text": "Prometheus", "value": "Prometheus" }
+      }
+    ]
+  },
+  "time": { "from": "now-15m", "to": "now" },
+  "title": "Practice4 — Idempotency Microservices",
+  "uid": "practice4-idempotency",
+  "version": 2
+}

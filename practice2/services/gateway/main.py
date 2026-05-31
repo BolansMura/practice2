@@ -13,6 +13,7 @@ from gateway.redis_client import close_redis, get_redis
 from shared.config import STREAM_NAME
 from shared.idempotency import is_valid_idempotency_key, result_key
 from shared.metrics import (
+    BUSINESS_TASKS_ACCEPTED,
     CACHE_HITS,
     CACHE_MISSES,
     HTTP_REQUEST_DURATION,
@@ -124,6 +125,7 @@ async def execute(
             raise HTTPException(status_code=503, detail="Redis service unavailable") from exc
 
         HTTP_REQUESTS.labels(method=method, endpoint=endpoint, status="202").inc()
+        BUSINESS_TASKS_ACCEPTED.labels(action=body.action.value).inc()
         response = AcceptedResponse(idempotency_key=key)
         return JSONResponse(status_code=202, content=response.model_dump())
     finally:

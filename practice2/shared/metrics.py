@@ -14,6 +14,18 @@ HTTP_REQUEST_DURATION = Histogram(
 CACHE_HITS = Counter("cache_hits_total", "Idempotency cache hits")
 CACHE_MISSES = Counter("cache_misses_total", "Idempotency cache misses")
 
+# Бизнес-метрики (practice4)
+BUSINESS_TASKS_ACCEPTED = Counter(
+    "business_tasks_accepted_total",
+    "Tasks accepted and enqueued to Redis Stream",
+    ["action"],
+)
+BUSINESS_TASKS_COMPLETED = Counter(
+    "business_tasks_completed_total",
+    "Tasks successfully processed by worker",
+    ["action"],
+)
+
 WORKER_TASKS_PROCESSED = Counter(
     "worker_tasks_processed_total",
     "Tasks processed by worker",
