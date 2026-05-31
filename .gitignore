@@ -5,4 +5,6 @@ __pycache__/
 venv/
 .env
 *.egg-info/
-practice2/docs/*.png
+# Скриншоты для отчёта — не игнорируем (нужны в PRACTICE2.md)
+practice2/.venv/
+practice2/.pytest_cache/
