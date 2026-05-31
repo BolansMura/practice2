@@ -1,0 +1,45 @@
+services:
+  redis:
+    image: redis:7-alpine
+    # Порт не публикуем на хост — gateway/worker ходят в redis:6379 внутри сети.
+    # Если нужен redis-cli с хоста: ports: ["6380:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      RETRY_MAX_ATTEMPTS: "3"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: services/worker/Dockerfile
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      WORKER_METRICS_PORT: "9090"
+      RETRY_MAX_ATTEMPTS: "3"
+    ports:
+      - "9090:9090"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  test:
+    profiles: ["test"]
+    build:
+      context: .
+      dockerfile: tests/Dockerfile
+      args:
+        GATEWAY_IMAGE: practice2-gateway:latest
